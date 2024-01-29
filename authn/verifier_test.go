@@ -11,15 +11,15 @@ import (
 	"testing"
 	"time"
 
+	jose "github.com/go-jose/go-jose/v3"
+	jwt "github.com/go-jose/go-jose/v3/jwt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	jose "gopkg.in/square/go-jose.v2"
-	jwt "gopkg.in/square/go-jose.v2/jwt"
 )
 
 func TestIDTokenVerifier(t *testing.T) {
 	// the good test key
-	defaultKey, err := rsa.GenerateKey(rand.Reader, 512)
+	defaultKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	require.NoError(t, err)
 	defaultJWK := jose.JSONWebKey{Key: defaultKey, KeyID: "defaultKey"}
 
@@ -92,9 +92,9 @@ func TestIDTokenVerifier(t *testing.T) {
 			token string
 			err   error
 		}{
-			{"", fmt.Errorf("square/go-jose: compact JWS format must have three parts")},
-			{"a", fmt.Errorf("square/go-jose: compact JWS format must have three parts")},
-			{"a.b", fmt.Errorf("square/go-jose: compact JWS format must have three parts")},
+			{"", fmt.Errorf("go-jose/go-jose: compact JWS format must have three parts")},
+			{"a", fmt.Errorf("go-jose/go-jose: compact JWS format must have three parts")},
+			{"a.b", fmt.Errorf("go-jose/go-jose: compact JWS format must have three parts")},
 			{"a.b.c", base64.CorruptInputError(0)},
 		}
 
@@ -105,7 +105,7 @@ func TestIDTokenVerifier(t *testing.T) {
 	})
 
 	t.Run("signed by unknown keypair", func(t *testing.T) {
-		unknownKey, err := rsa.GenerateKey(rand.Reader, 512)
+		unknownKey, err := rsa.GenerateKey(rand.Reader, 2048)
 		require.NoError(t, err)
 		unknownJWK := jose.JSONWebKey{Key: unknownKey, KeyID: "unknownKey"}
 		unknownSigner, err := jose.NewSigner(

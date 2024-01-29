@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	jwt "gopkg.in/square/go-jose.v2/jwt"
+	jwt "github.com/go-jose/go-jose/v3/jwt"
 )
 
 var ErrNoKey = errors.New("No keys found")
@@ -91,17 +91,10 @@ func (verifier *idTokenVerifier) claims(idToken string) (*Claims, error) {
 
 // Verify the claims against the configured values
 func (verifier *idTokenVerifier) verify(claims *Claims) error {
-	var err error
-
 	// Validate rest of the claims
-	err = claims.Validate(jwt.Expected{
+	return claims.Validate(jwt.Expected{
 		Issuer:   verifier.issuerURL.String(),
 		Time:     time.Now(),
 		Audience: verifier.audience,
 	})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

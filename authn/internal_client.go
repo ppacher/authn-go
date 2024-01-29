@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	jose "gopkg.in/square/go-jose.v2"
+	jose "github.com/go-jose/go-jose/v3"
 )
 
 type internalClient struct {
@@ -170,6 +170,7 @@ func (ic *internalClient) absoluteURL(path string) string {
 }
 
 // unused. this will eventually execute private admin actions.
+// nolint: unused
 func (ic *internalClient) get(path string, dest interface{}) (int, error) {
 	resp, err := http.Get(ic.absoluteURL(path))
 	if err != nil {
